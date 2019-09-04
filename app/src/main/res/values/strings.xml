@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">WinetramApp</string>
+
+
+    <string name="title_activity_driver_map">Map</string>
+    <string-array name="TramLines">
+        <item>Select Line</item>
+        <item>Franschhoek Tram</item>
+        <item>Drakenstein Tram</item>
+        <item>GreyPink Tram</item>
+    </string-array>
+    <string-array name="lines">
+        <item>Select Line</item>
+        <item>Red Line</item>
+        <item>Blue Line</item>
+        <item>Green Line</item>
+        <item>Yellow Line</item>
+        <item>Purple Line</item>
+        <item>Orange Line</item>
+        <item>Grey Line</item>
+        <item>Pink Line</item>
+    </string-array>
+</resources>
