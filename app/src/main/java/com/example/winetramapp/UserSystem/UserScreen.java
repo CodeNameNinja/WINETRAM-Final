@@ -53,6 +53,7 @@ public class UserScreen extends AppCompatActivity {
                 mList.add(new RecyclerItem(R.drawable.bus, "Holden Manz", "-- | 13:02 | 14:02 | 15:02 | 16:02 | 17:02"));
                 mList.add(new RecyclerItem(R.drawable.bus, "Charmonix", "-- | -- | 13:14 | 14:14 | 15:14 | 16:14 | 17:14"));
                 mList.add(new RecyclerItem(R.drawable.bus, "Dieu Donne", "-- | -- | 13:17 | 14:17 | 15:17 | 16:17 | 17:17"));
+
                 break;
             case 2:
                 getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.green)));
@@ -65,6 +66,7 @@ public class UserScreen extends AppCompatActivity {
                 mList.add(new RecyclerItem(R.drawable.bus, "La Bourgogne", "-- | 12:22 | 13:22 | 14:22 | 15:22 | 16:22 | 17:22"));
                 mList.add(new RecyclerItem(R.drawable.bus, "Glenwood", "-- | -- | 12:35 | 13:35 | 14:35 | 15:35 | 16:35 | 17:35"));
                 mList.add(new RecyclerItem(R.drawable.bus, "La Couronne", "-- | -- | 12:46 | 13:46 | 14:46 | 15:46 | 16:46 | 17:46"));
+
                 break;
             case 3:
                 getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.yellow)));
@@ -77,6 +79,7 @@ public class UserScreen extends AppCompatActivity {
                 mList.add(new RecyclerItem(R.drawable.bus, "Holden Manz", "-- | 13:02 | 14:02 | 15:02 | 16:02 | 17:02"));
                 mList.add(new RecyclerItem(R.drawable.bus, "Charmonix", "-- | -- | 13:14 | 14:14 | 15:14 | 16:14 | 17:14"));
                 mList.add(new RecyclerItem(R.drawable.bus, "Dieu Donne", "-- | -- | 13:17 | 14:17 | 15:17 | 16:17 | 17:17"));
+
                 break;
             case 4:
                 getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.purple)));
@@ -89,6 +92,7 @@ public class UserScreen extends AppCompatActivity {
                 mList.add(new RecyclerItem(R.drawable.bus, "Nobile Hill", "--- | --- | --- | 12:31 | 13:06 | 13:41 | 14:16 | 14:51 | 15:26 | 16:01 | 16:36 | 17:11"));
                 mList.add(new RecyclerItem(R.drawable.bus, "Babylonstoren", "--- | --- | --- | 12:39 | 13:14 | 13:49 | 14:24 | 14:59 | 15:34 | 16:09 | 16:44 | 17:19"));
                 mList.add(new RecyclerItem(R.drawable.bus, "Backsberg", "--- | --- | --- | 12:46 | 13:21 | 13:56 | 14:31 | 15:06 | 15:34 | 16:16 | 16:51 | 17:26"));
+
                 break;
             case 5:
                 getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.orange)));
@@ -114,6 +118,7 @@ public class UserScreen extends AppCompatActivity {
                 mList.add(new RecyclerItem(R.drawable.bus, "Moreson", "--- | --- | 13:11 | 14:11 | 15:11 | 16:11 | 17:11"));
                 mList.add(new RecyclerItem(R.drawable.bus, "Eikehof", "--- | --- | 13:11 | 14:11 | 15:11 | 16:11 | 17:11"));
                 mList.add(new RecyclerItem(R.drawable.bus, "Paserene", "--- | --- | 13:11 | 14:11 | 15:11 | 16:11 | 17:11"));
+
                 break;
             case 7:
                 getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.pink)));
@@ -128,6 +133,7 @@ public class UserScreen extends AppCompatActivity {
                 mList.add(new RecyclerItem(R.drawable.bus, "Haute Cabriere", "-- | -- | 13:11 | 14:11 | 15:11 | 16:11 | 17:11"));
                 mList.add(new RecyclerItem(R.drawable.bus, "Le Lude", "-- | -- | 13:11 | 14:11 | 15:11 | 16:11 | 17:11"));
                 mList.add(new RecyclerItem(R.drawable.bus, "Franschhoek Celler", "-- | -- | 13:11 | 14:11 | 15:11 | 16:11 | 17:11"));
+
                 break;
 
         }

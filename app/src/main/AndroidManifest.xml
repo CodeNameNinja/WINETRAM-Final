@@ -52,6 +52,23 @@
         <activity android:name=".UserSystem.SelectRoute"
             android:parentActivityName=".LoginScreen"/>
         <activity android:name=".UserSystem.DetailActivity" />
+        <activity android:name=".UserSystem.Routes.RedLineScreen"
+            android:parentActivityName=".UserSystem.SelectRoute"/>
+        <activity android:name=".UserSystem.Routes.BlueLineSceen"
+            android:parentActivityName=".UserSystem.SelectRoute"/>
+        <activity android:name=".UserSystem.Routes.GreenLineScreen"
+            android:parentActivityName=".UserSystem.SelectRoute"/>
+        <activity android:name=".UserSystem.Routes.YellowLineScreen"
+            android:parentActivityName=".UserSystem.SelectRoute"/>
+        <activity android:name=".UserSystem.Routes.OrangeLineScreen"
+            android:parentActivityName=".UserSystem.SelectRoute"/>
+        <activity android:name=".UserSystem.Routes.PinkLineScreen"
+            android:parentActivityName=".UserSystem.SelectRoute"/>
+        <activity android:name=".UserSystem.Routes.PurpleLineScreen"
+            android:parentActivityName=".UserSystem.SelectRoute"/>
+        <activity android:name=".UserSystem.Routes.GreyLineScreen"
+            android:parentActivityName=".UserSystem.SelectRoute"/>
+
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

@@ -10,11 +10,17 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.viewpager.widget.ViewPager;
 
-import com.example.winetramapp.DriverSystem.DriverLoginActivity;
 import com.example.winetramapp.R;
+import com.example.winetramapp.UserSystem.Routes.BlueLineSceen;
+import com.example.winetramapp.UserSystem.Routes.GreenLineScreen;
+import com.example.winetramapp.UserSystem.Routes.GreyLineScreen;
+import com.example.winetramapp.UserSystem.Routes.OrangeLineScreen;
+import com.example.winetramapp.UserSystem.Routes.PinkLineScreen;
+import com.example.winetramapp.UserSystem.Routes.PurpleLineScreen;
+import com.example.winetramapp.UserSystem.Routes.RedLineScreen;
+import com.example.winetramapp.UserSystem.Routes.YellowLineScreen;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,9 +37,9 @@ public class SelectRoute extends AppCompatActivity {
     private TextView[] mDots;
     public static int selectedRoute;
 
-    private void goToUserScreen()
+    private void goToUserScreen(Class Route)
     {
-        Intent intent = new Intent(this,UserScreen.class);
+        Intent intent = new Intent(this,Route);
         startActivity(intent);
     }
     public void selectLine(View view)
@@ -42,35 +48,35 @@ public class SelectRoute extends AppCompatActivity {
         {
             case 0:
                selectedRoute = 0;
-               goToUserScreen();
+               goToUserScreen(RedLineScreen.class);
                 break;
             case 1:
                selectedRoute = 1;
-               goToUserScreen();
+               goToUserScreen(BlueLineSceen.class);
                 break;
             case 2:
                 selectedRoute = 2;
-                goToUserScreen();
+                goToUserScreen(GreenLineScreen.class);
                 break;
             case 3:
                 selectedRoute = 3;
-                goToUserScreen();
+                goToUserScreen(YellowLineScreen.class);
                 break;
             case 4:
                 selectedRoute = 4;
-                goToUserScreen();
+                goToUserScreen(PurpleLineScreen.class);
                 break;
             case 5:
                 selectedRoute = 5;
-                goToUserScreen();
+                goToUserScreen(OrangeLineScreen.class);
                 break;
             case 6:
                 selectedRoute = 6;
-                goToUserScreen();
+                goToUserScreen(GreyLineScreen.class);
                 break;
             case 7:
                 selectedRoute = 7;
-                goToUserScreen();
+                goToUserScreen(PinkLineScreen.class);
                 break;
 
         }
