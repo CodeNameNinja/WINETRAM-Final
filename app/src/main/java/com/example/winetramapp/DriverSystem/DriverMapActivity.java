@@ -9,6 +9,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
@@ -18,8 +19,10 @@ import android.os.Looper;
 import android.os.PowerManager;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.Switch;
 
 import com.example.winetramapp.Constants;
@@ -32,6 +35,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
@@ -42,10 +46,15 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.maps.android.clustering.Cluster;
+import com.google.maps.android.clustering.ClusterManager;
+import com.google.maps.android.clustering.view.DefaultClusterRenderer;
+import com.google.maps.android.ui.IconGenerator;
 import com.nabinbhandari.android.permissions.PermissionHandler;
 import com.nabinbhandari.android.permissions.Permissions;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Map;
 
 public class DriverMapActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -57,6 +66,7 @@ public class DriverMapActivity extends AppCompatActivity implements OnMapReadyCa
     private String TAG = DriverMapActivity.class.getSimpleName();
     private int DriverSelectedLine = DriverLoginActivity.DriverSelectedLine;
     final String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+    private ClusterManager<ClusterMarker> mClusterManager;
 
 
     @Override
@@ -262,9 +272,11 @@ public class DriverMapActivity extends AppCompatActivity implements OnMapReadyCa
         mMap = googleMap;
 
         // Add a marker in Sydney and move the camera
-        LatLng franschhoek = new LatLng(-33.910979, 19.119677);
+        LatLng franschhoek = new LatLng(-33.911024, 19.119688);
+
         mMap.addMarker(new MarkerOptions().position(franschhoek).title("Franschhoek Ticket Office"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(franschhoek));
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(12));
         mMap.setMyLocationEnabled(true);
         final Handler handler = new Handler();
 
@@ -281,7 +293,11 @@ public class DriverMapActivity extends AppCompatActivity implements OnMapReadyCa
                             .strokeWidth(1)
                             .radius(entry.getValue().getValue());
                     circle = mMap.addCircle(circleOptions);
+                    Log.i(TAG,"GeoFence radius: "+entry.getValue().getValue());
+
                 }
+                setUpClusterer();
+
             }
         });
     }
@@ -318,7 +334,93 @@ public class DriverMapActivity extends AppCompatActivity implements OnMapReadyCa
         });
 
     }
+    private class PersonRenderer extends DefaultClusterRenderer<ClusterMarker>
+    {
 
+        private final IconGenerator mIconGenerator = new IconGenerator(getApplicationContext());
+        private final IconGenerator mClusterIconGenerator = new IconGenerator(getApplicationContext());
+        private final ImageView mImageView;
+        private final ImageView mClusterImageView;
+        private final int mDimension;
+
+        PersonRenderer() {
+            super(getApplicationContext(), mMap, mClusterManager);
+
+            View multiProfile = getLayoutInflater().inflate(R.layout.multi_profile, null);
+            mClusterIconGenerator.setContentView(multiProfile);
+            mClusterImageView = (ImageView) multiProfile.findViewById(R.id.image);
+
+            mImageView = new ImageView(getApplicationContext());
+            mDimension = (int) getResources().getDimension(R.dimen.custom_marker_image);
+            mImageView.setLayoutParams(new ViewGroup.LayoutParams(mDimension, mDimension));
+            int padding = (int) getResources().getDimension(R.dimen.custom_marker_padding);
+            mImageView.setPadding(padding, padding, padding, padding);
+            mIconGenerator.setContentView(mImageView);
+        }
+
+        @Override
+        protected void onBeforeClusterItemRendered(ClusterMarker item, MarkerOptions markerOptions) {
+
+            mImageView.setImageResource(item.profilePhoto);
+            Bitmap icon = mIconGenerator.makeIcon();
+            markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon)).title(item.name);
+        }
+        @Override
+        protected boolean shouldRenderAsCluster(Cluster cluster) {
+            // Always render clusters.
+            return false;
+        }
+
+    }
+
+    private void setUpClusterer() {
+        // mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(-33.886851, 19.076072), 10));
+        mClusterManager = new ClusterManager<ClusterMarker>(this, mMap);
+        mClusterManager.setRenderer(new PersonRenderer());
+        mMap.setOnCameraIdleListener(mClusterManager);
+
+        // Add cluster items (markers) to the cluster manager.
+        addItems();
+        mClusterManager.cluster();
+    }
+
+    private void addItems() {
+        mClusterManager.addItems(Collections.singleton(new ClusterMarker(Constants.PlatformA, "Platform A", R.drawable.grande_provance)));
+        mClusterManager.addItems(Collections.singleton(new ClusterMarker(Constants.Maison, "Maison", R.drawable.grande_provance)));
+        mClusterManager.addItems(Collections.singleton(new ClusterMarker(Constants.MontRochelle, "Mont Rochelle", R.drawable.grande_provance)));
+        mClusterManager.addItems(Collections.singleton(new ClusterMarker(Constants.HoldenManz, "Holden Manz", R.drawable.grande_provance)));
+        mClusterManager.addItems(Collections.singleton(new ClusterMarker(Constants.Charmonix, "Charmonix", R.drawable.grande_provance)));
+        mClusterManager.addItems(Collections.singleton(new ClusterMarker(Constants.DieuDonne, "Dieun Donne", R.drawable.grande_provance)));
+        mClusterManager.addItems(Collections.singleton(new ClusterMarker(Constants.GrandeProvancePlatform, "Grande Provance Platform", R.drawable.tram)));
+        mClusterManager.addItems(Collections.singleton(new ClusterMarker(Constants.GrandProvanceWine, "Grande Provance Wine", R.drawable.grande_provance)));
+        mClusterManager.addItems(Collections.singleton(new ClusterMarker(Constants.GrandProvanceResturant, "Grande Provance Platform", R.drawable.grande_provance)));
+        mClusterManager.addItems(Collections.singleton(new ClusterMarker(Constants.RicketyBridge, "Rickety Bridge", R.drawable.grande_provance)));
+        mClusterManager.addItems(Collections.singleton(new ClusterMarker(Constants.RicketyBridgePlatform, "Rickety Bridge Platform", R.drawable.tram)));
+        mClusterManager.addItems(Collections.singleton(new ClusterMarker(Constants.LaBougogne, "La Bourgogne", R.drawable.grande_provance)));
+        mClusterManager.addItems(Collections.singleton(new ClusterMarker(Constants.LaBri, "La Bri", R.drawable.grande_provance)));
+        mClusterManager.addItems(Collections.singleton(new ClusterMarker(Constants.Glenwood, "GlenWood", R.drawable.grande_provance)));
+        mClusterManager.addItems(Collections.singleton(new ClusterMarker(Constants.LaCouronne, "La Couronne", R.drawable.grande_provance)));
+        mClusterManager.addItems(Collections.singleton(new ClusterMarker(Constants.LeopardsLeap, "Leopards Leap", R.drawable.grande_provance)));
+        mClusterManager.addItems(Collections.singleton(new ClusterMarker(Constants.Moreson, "Moreson", R.drawable.grande_provance)));
+        mClusterManager.addItems(Collections.singleton(new ClusterMarker(Constants.FranschhoekCellarBuilding, "Franschhoek Cellar", R.drawable.grande_provance)));
+        mClusterManager.addItems(Collections.singleton(new ClusterMarker(Constants.FranschhoekCellarOutdoors, "Franschhoek Cellar", R.drawable.grande_provance)));
+        mClusterManager.addItems(Collections.singleton(new ClusterMarker(Constants.Paserene, "Paserene", R.drawable.grande_provance)));
+        mClusterManager.addItems(Collections.singleton(new ClusterMarker(Constants.HauteCabriere, "Haute Cabriere", R.drawable.grande_provance)));
+        mClusterManager.addItems(Collections.singleton(new ClusterMarker(Constants.Eikehof, "Eikehof", R.drawable.grande_provance)));
+        mClusterManager.addItems(Collections.singleton(new ClusterMarker(Constants.GrootDrakenstein, "Groot Drakenstein Platform", R.drawable.bus)));
+        mClusterManager.addItems(Collections.singleton(new ClusterMarker(Constants.PlasirDeMerlePlatform, "Plasir De Merle Platform", R.drawable.tram)));
+        mClusterManager.addItems(Collections.singleton(new ClusterMarker(Constants.PlasirDeMerleWineTasting, "Plasir De Merle", R.drawable.grande_provance)));
+        mClusterManager.addItems(Collections.singleton(new ClusterMarker(Constants.VredeEnLust, "VredeEnLust", R.drawable.grande_provance)));
+        mClusterManager.addItems(Collections.singleton(new ClusterMarker(Constants.Simondium, "Simondium Platform", R.drawable.bus)));
+        mClusterManager.addItems(Collections.singleton(new ClusterMarker(Constants.NobilHill, "Nobil hill", R.drawable.grande_provance)));
+        mClusterManager.addItems(Collections.singleton(new ClusterMarker(Constants.Babylonstoren, "Babylonstoren", R.drawable.grande_provance)));
+        mClusterManager.addItems(Collections.singleton(new ClusterMarker(Constants.Backsberg, "Backsberg", R.drawable.grande_provance)));
+        mClusterManager.addItems(Collections.singleton(new ClusterMarker(Constants.AlleeBleue, "Allee Bleue", R.drawable.grande_provance)));
+        mClusterManager.addItems(Collections.singleton(new ClusterMarker(Constants.SolmDelta, "Solms Delta", R.drawable.grande_provance)));
+        mClusterManager.addItems(Collections.singleton(new ClusterMarker(Constants.Boschendal, "Boschendal", R.drawable.grande_provance)));
+        mClusterManager.addItems( Collections.singleton(new ClusterMarker(Constants.LeLude, "Le Lude", R.drawable.grande_provance)));
+        mClusterManager.addItems(Collections.singleton(new ClusterMarker(Constants.TicketOffice, "Ticket Office", R.drawable.bus)));
+    }
     @Override
     protected void onDestroy() {
         super.onDestroy();

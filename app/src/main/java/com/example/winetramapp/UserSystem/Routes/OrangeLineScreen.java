@@ -88,9 +88,10 @@ public class OrangeLineScreen extends AppCompatActivity {
         notificationSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                saveData("orange",b);
                 if(b)
                 {
-                    saveData("orange",b);
+
                     Intent i = new Intent(getApplicationContext(), UserLocationServices.class);
                     startService(i);
                     conditions();

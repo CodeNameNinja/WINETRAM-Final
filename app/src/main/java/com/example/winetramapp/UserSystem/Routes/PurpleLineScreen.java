@@ -87,9 +87,9 @@ public class PurpleLineScreen extends AppCompatActivity {
         notificationSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                saveData("purple",b);
                 if(b)
                 {
-                    saveData("purple",b);
                     Intent i = new Intent(getApplicationContext(), UserLocationServices.class);
                     startService(i);
                     conditions();

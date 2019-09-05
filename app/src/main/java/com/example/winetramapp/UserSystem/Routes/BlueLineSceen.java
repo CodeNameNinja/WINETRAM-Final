@@ -87,9 +87,9 @@ public class BlueLineSceen extends AppCompatActivity {
         notificationSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                saveData("blue",b);
                 if(b)
                 {
-                    saveData("blue",b);
                     Intent i = new Intent(getApplicationContext(), UserLocationServices.class);
                     startService(i);
                     conditions();

@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -107,7 +108,10 @@ public class DriverLocationService extends Service {
         Handler handler = new Handler();
         handler.post(() -> {
             for (Map.Entry<String, Map.Entry<LatLng,Integer>> entry : Constants.MAIN_GEOFENCES.entrySet()) {
-                GeoQuery geoQuery = geoFire.queryAtLocation(new GeoLocation(entry.getValue().getKey().latitude,entry.getValue().getKey().longitude),0.5f);
+                double entryRadius = entry.getValue().getValue();
+                entryRadius = entryRadius/1000;
+                Log.i(TAG, "Geofence:  "+entry.getKey()+"Radius: " + entryRadius);
+                GeoQuery geoQuery = geoFire.queryAtLocation(new GeoLocation(entry.getValue().getKey().latitude,entry.getValue().getKey().longitude),entryRadius);
                 geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
                     @Override
                     public void onKeyEntered(String key, GeoLocation location) {
@@ -272,6 +276,7 @@ public class DriverLocationService extends Service {
     public void onCreate() {
         super.onCreate();
 
+        connectFirebase();
         fusedLocationProviderClient = new FusedLocationProviderClient(DriverLocationService.this);
         locationRequest = new LocationRequest();
 
@@ -303,7 +308,28 @@ public class DriverLocationService extends Service {
 
         return START_NOT_STICKY;
     }
+private void connectFirebase()
+{
+    DatabaseReference connectedRef = FirebaseDatabase.getInstance().getReference(".info/connected");
+    connectedRef.addValueEventListener(new ValueEventListener() {
+        @Override
+        public void onDataChange(@NonNull DataSnapshot snapshot) {
+            boolean connected = snapshot.getValue(Boolean.class);
+            if (connected) {
+                Log.d(TAG, "connected");
+                Toast.makeText(DriverLocationService.this, "connected to firebase", Toast.LENGTH_SHORT).show();
+            } else {
+                Log.e(TAG, "not connected");
+            }
+        }
 
+        @Override
+        public void onCancelled(@NonNull DatabaseError error) {
+            Log.w(TAG, "Listener was cancelled");
+        }
+    });
+
+}
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -313,6 +339,10 @@ public class DriverLocationService extends Service {
          Log.e(TAG,"FAILED TO REMOVE LOCATION: " + "\n"+e);
         }
     }
+private void locationSettings()
+{
+
+}
 
 
 }

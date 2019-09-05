@@ -1,9 +1,15 @@
 package com.example.winetramapp.UserSystem.Routes;
 
 import android.app.Notification;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.CompoundButton;
@@ -11,12 +17,14 @@ import android.widget.Switch;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.winetramapp.DriverSystem.DriverPasswordScreen;
 import com.example.winetramapp.R;
 import com.example.winetramapp.UserSystem.RecyclerAdapter;
 import com.example.winetramapp.UserSystem.RecyclerItem;
@@ -61,7 +69,7 @@ public class RedLineScreen extends AppCompatActivity {
 
         getSupportActionBar().setTitle("Time Table");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+        installListener();
         ArrayList<RecyclerItem> mList = new ArrayList<>();
         if(SelectRoute.selectedRoute == 0) {
                 getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.red)));
@@ -83,13 +91,14 @@ public class RedLineScreen extends AppCompatActivity {
         notificationManager = NotificationManagerCompat.from(this);
         notificationSwitch = (Switch) findViewById(R.id.notification_switch);
         loadData("red");
+        Log.i(TAG,"Loaded red");
         updateView(notificationSwitch);
         notificationSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                saveData("red",b);
                 if(b)
                 {
-                    saveData("red",b);
                     Intent i = new Intent(getApplicationContext(), UserLocationServices.class);
                     startService(i);
                     conditions();
@@ -106,6 +115,7 @@ public class RedLineScreen extends AppCompatActivity {
     private void saveData(String key , boolean value) {
         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.clear();
         editor.putBoolean(key,value);
         editor.apply();
     }
@@ -133,16 +143,15 @@ public class RedLineScreen extends AppCompatActivity {
                 try{
                     String location = dataSnapshot.getValue().toString();
                     busNotificationsBody("The bus is at: " + location);
+
                 }catch (Exception e)
                 {
                     Log.e(TAG,"Could not retrieve bus location");
                 }
-
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
             }
         });
         tramFranschhoekDatabaseReference.addValueEventListener(new ValueEventListener() {
@@ -155,7 +164,6 @@ public class RedLineScreen extends AppCompatActivity {
                 {
                     Log.e(TAG,"Couldent Get Tram Location" + e);
                 }
-
             }
 
             @Override
@@ -192,5 +200,74 @@ public class RedLineScreen extends AppCompatActivity {
                 .build();
 
         notificationManager.notify(2,notification);
+    }
+
+    BroadcastReceiver broadcastReceiver;
+    private void installListener() {
+
+        if (broadcastReceiver == null) {
+
+            broadcastReceiver = new BroadcastReceiver() {
+
+                @Override
+                public void onReceive(Context context, Intent intent) {
+
+                    Bundle extras = intent.getExtras();
+
+                    NetworkInfo info = (NetworkInfo) extras
+                            .getParcelable("networkInfo");
+
+                    NetworkInfo.State state = info.getState();
+                    Log.d(TAG, info.toString() + " "
+                            + state.toString());
+
+                    if (state == NetworkInfo.State.CONNECTED) {
+
+                        onNetworkUp();
+
+                    } else {
+
+                        onNetworkDown();
+
+                    }
+
+                }
+            };
+
+            final IntentFilter intentFilter = new IntentFilter();
+            intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+            registerReceiver(broadcastReceiver, intentFilter);
+        }
+    }
+
+    private void onNetworkDown() {
+        AlertDialog alertDialog = new AlertDialog.Builder(RedLineScreen.this).create();
+        alertDialog.setTitle("Network is Down");
+        alertDialog.setMessage("The Network is not Working");
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        alertDialog.show();
+    }
+
+    private void onNetworkUp() {
+        AlertDialog alertDialog = new AlertDialog.Builder(RedLineScreen.this).create();
+        alertDialog.setTitle("Network is Up");
+        alertDialog.setMessage("The Network is working");
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        alertDialog.show();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 }

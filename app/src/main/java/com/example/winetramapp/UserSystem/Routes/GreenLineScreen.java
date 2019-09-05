@@ -88,9 +88,9 @@ public class GreenLineScreen extends AppCompatActivity {
         notificationSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                saveData("green",b);
                 if(b)
                 {
-                    saveData("green",b);
                     Intent i = new Intent(getApplicationContext(), UserLocationServices.class);
                     startService(i);
                     conditions();

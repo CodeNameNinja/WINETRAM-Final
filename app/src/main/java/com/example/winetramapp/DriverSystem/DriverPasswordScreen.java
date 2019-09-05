@@ -61,20 +61,25 @@ public class DriverPasswordScreen extends AppCompatActivity implements View.OnCl
         buttonEight.setOnClickListener(this);
         buttonNine.setOnClickListener(this);
 
+try{
+    if(Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP) {
+        buttonZero.setBackgroundResource(R.drawable.ic_btn_circle_l);
+        buttonOne.setBackgroundResource(R.drawable.ic_btn_circle_l);
+        buttonTwo.setBackgroundResource(R.drawable.ic_btn_circle_l);
+        buttonThree.setBackgroundResource(R.drawable.ic_btn_circle_l);
+        buttonFour.setBackgroundResource(R.drawable.ic_btn_circle_l);
+        buttonFive.setBackgroundResource(R.drawable.ic_btn_circle_l);
+        buttonSix.setBackgroundResource(R.drawable.ic_btn_circle_l);
+        buttonSeven.setBackgroundResource(R.drawable.ic_btn_circle_l);
+        buttonEight.setBackgroundResource(R.drawable.ic_btn_circle_l);
+        buttonNine.setBackgroundResource(R.drawable.ic_btn_circle_l);
 
-        if(Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP) {
-            buttonZero.setBackgroundResource(R.drawable.ic_btn_circle_l);
-            buttonOne.setBackgroundResource(R.drawable.ic_btn_circle_l);
-            buttonTwo.setBackgroundResource(R.drawable.ic_btn_circle_l);
-            buttonThree.setBackgroundResource(R.drawable.ic_btn_circle_l);
-            buttonFour.setBackgroundResource(R.drawable.ic_btn_circle_l);
-            buttonFive.setBackgroundResource(R.drawable.ic_btn_circle_l);
-            buttonSix.setBackgroundResource(R.drawable.ic_btn_circle_l);
-            buttonSeven.setBackgroundResource(R.drawable.ic_btn_circle_l);
-            buttonEight.setBackgroundResource(R.drawable.ic_btn_circle_l);
-            buttonNine.setBackgroundResource(R.drawable.ic_btn_circle_l);
+    }
+}catch (Exception e)
+{
+    System.out.println(e);
+}
 
-        }
 
 
     }

@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.CompoundButton;
 import android.widget.Switch;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -42,6 +43,19 @@ public class PinkLineScreen extends AppCompatActivity {
     final DatabaseReference tramFranschhoekDatabaseReference = FirebaseDatabase.getInstance().getReference().child("driversAvailable").child("drivers").child("Tram Franschhoek").child("Tram Franschhoek Location");
     private NotificationManagerCompat notificationManager;
 
+    private String timeTableArgs(String ... mTimes)
+    {
+        String mHours = "";
+        for(String mH:mTimes)
+        {
+            mHours = mH;
+            System.out.println(mHours);
+
+        }
+        return mHours;
+
+    }
+
 
     @Override
     protected void onResume() {
@@ -65,15 +79,14 @@ public class PinkLineScreen extends AppCompatActivity {
 
         if(SelectRoute.selectedRoute == 7) {
             getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.pink)));
-
             mList.add(new RecyclerItem(R.drawable.bus, "Ticket Office", "10:07 | 11:07 | 12:07 | 13:07 | 14:07 | 15:07 | 16:07"));
-            mList.add(new RecyclerItem(R.drawable.tram, "Tram Platform", "10:15 | 11:15 | 12:15 | 13:15 | 14:15 | 15:15 16:15"));
-            mList.add(new RecyclerItem(R.drawable.bus, "Leopards Leap", "10:22 | 11:22 | 12:22 | 13:22 | 14:22 | 15:22 | 16:22"));
-            mList.add(new RecyclerItem(R.drawable.bus, "Moreson", "10:35 | 11:35 | 12:35 | 13:35 | 14:35 | 15:35 | 16:35"));
-            mList.add(new RecyclerItem(R.drawable.bus, "Eikehof", "10:46| 11:46 | 12:46 | 13:46 | 14:46 | 15:46 | 16:46"));
-            mList.add(new RecyclerItem(R.drawable.bus, "Paserene", "-- | -- | 13:03 | 14:03 | 15:03 | 16:03 | 17:03"));
+            mList.add(new RecyclerItem(R.drawable.tram, "Rickety Bridge Platform", "10:15 | 11:15 | 12:15 | 13:15 | 14:15 | 15:15 16:15"));
+            mList.add(new RecyclerItem(R.drawable.bus, "Moreson", "10:22 | 11:22 | 12:22 | 13:22 | 14:22 | 15:22 | 16:22"));
+            mList.add(new RecyclerItem(R.drawable.bus, "Eikehof", "10:35 | 11:35 | 12:35 | 13:35 | 14:35 | 15:35 | 16:35"));
+            mList.add(new RecyclerItem(R.drawable.bus, "Paserene", "10:46| 11:46 | 12:46 | 13:46 | 14:46 | 15:46 | 16:46"));
+            mList.add(new RecyclerItem(R.drawable.bus, "Leopard's Leap", "-- | -- | 13:03 | 14:03 | 15:03 | 16:03 | 17:03"));
+            mList.add(new RecyclerItem(R.drawable.bus, "Rickety Bridge Platform", "-- | -- | 13:11 | 14:11 | 15:11 | 16:11 | 17:11"));
             mList.add(new RecyclerItem(R.drawable.bus, "Franschhoek Village", "-- | -- | 13:11 | 14:11 | 15:11 | 16:11 | 17:11"));
-            mList.add(new RecyclerItem(R.drawable.bus, "Haute Cabriere", "-- | -- | 13:11 | 14:11 | 15:11 | 16:11 | 17:11"));
             mList.add(new RecyclerItem(R.drawable.bus, "Le Lude", "-- | -- | 13:11 | 14:11 | 15:11 | 16:11 | 17:11"));
             mList.add(new RecyclerItem(R.drawable.bus, "Franschhoek Celler", "-- | -- | 13:11 | 14:11 | 15:11 | 16:11 | 17:11"));
 
@@ -92,9 +105,10 @@ public class PinkLineScreen extends AppCompatActivity {
         notificationSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                saveData("pink",b);
                 if(b)
                 {
-                    saveData("pink",b);
+                    Toast.makeText(PinkLineScreen.this, timeTableArgs("10","12"), Toast.LENGTH_SHORT).show();
                     Intent i = new Intent(getApplicationContext(), UserLocationServices.class);
                     startService(i);
                     conditions();
@@ -142,7 +156,6 @@ public class PinkLineScreen extends AppCompatActivity {
                 {
                     Log.e(TAG,"Could not retrieve bus location");
                 }
-
             }
 
             @Override
