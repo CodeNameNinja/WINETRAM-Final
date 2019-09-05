@@ -12,15 +12,21 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.winetramapp.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class DriverPasswordScreen extends AppCompatActivity implements View.OnClickListener {
     int counter;
     String masterCode = "5555";
+    String triggerCode = "9999";
     int iCode1,iCode2,iCode3,iCode4;
     int buttonClicked;
     String TAG = DriverPasswordScreen.class.getSimpleName();
@@ -79,9 +85,6 @@ try{
 {
     System.out.println(e);
 }
-
-
-
     }
 
     private void circleControl()
@@ -109,12 +112,25 @@ try{
                     @Override
                     public void run() {
                         String masterTest = iCode1 + "" + iCode2 + "" + iCode3 + "" + iCode4;
+                        String triggerTest = iCode1 + "" + iCode2 + "" + iCode3 + "" + iCode4;
 
                         if (masterTest.equals(masterCode)){
                             Intent intent = new Intent(DriverPasswordScreen.this,DriverLoginActivity.class);
                             startActivity(intent);
 
-                        }else{
+                        }
+                        if (triggerTest.equals(triggerCode)){
+                           DatabaseReference trigger = FirebaseDatabase.getInstance().getReference().child("notify").child("value:");
+                           trigger.setValue(true);
+                           Handler handler1 = new Handler();
+                           handler1.postDelayed(new Runnable() {
+                               @Override
+                               public void run() {
+                                   trigger.setValue(false);
+                               }
+                           },5000);
+                        }
+                        else{
                             AlertDialog alertDialog = new AlertDialog.Builder(DriverPasswordScreen.this).create();
                             alertDialog.setTitle("Password Incorrect");
                             alertDialog.setMessage("Please re-enter password");
@@ -191,6 +207,7 @@ try{
             case R.id.btnNine:
                 Log.i(TAG,"btnNine PRESSED");
                 buttonClicked = 9;
+
                 circleControl();
                 break;
 

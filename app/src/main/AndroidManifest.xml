@@ -47,7 +47,7 @@
         <activity
             android:name=".DriverSystem.TramRegistrationActivity"
             android:parentActivityName=".DriverSystem.DriverLoginActivity" />
-        <activity android:name=".UserSystem.UserScreen"
+        <activity android:name=".UserSystem.Common"
             android:parentActivityName=".UserSystem.SelectRoute"/>
         <activity android:name=".UserSystem.SelectRoute"
             android:parentActivityName=".LoginScreen"/>

@@ -5,24 +5,37 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.location.Location;
+import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
+import com.example.winetramapp.Constants;
 import com.example.winetramapp.DriverSystem.DriverLocationService;
 import com.example.winetramapp.LoginScreen;
 import com.example.winetramapp.R;
 import com.firebase.geofire.GeoFire;
+import com.firebase.geofire.GeoLocation;
+import com.firebase.geofire.GeoQuery;
+import com.firebase.geofire.GeoQueryEventListener;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
-import com.google.firebase.auth.FirebaseAuth;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.Map;
+import java.util.UUID;
 
 import static com.example.winetramapp.NotificationChannel.CHANNEL_1_ID;
 import static com.example.winetramapp.NotificationChannel.CHANNEL_2_ID;
@@ -36,6 +49,9 @@ public class UserLocationServices extends Service  {
     GeoFire geoFire;
     private NotificationManagerCompat notificationManager;
     String enteredFence;
+    final DatabaseReference UserRef = FirebaseDatabase.getInstance().getReference().child("usersAvailable").child("Users");
+    Common common = new Common();
+    static String uniqueID = UUID.randomUUID().toString();
 
     @Override
     public void onCreate() {
@@ -48,6 +64,8 @@ public class UserLocationServices extends Service  {
 
         fusedLocationProviderClient.requestLocationUpdates(locationRequest,mLocationRequestCallback, Looper.myLooper());
         notificationManager = NotificationManagerCompat.from(this);
+
+
     }
 
     @Nullable
@@ -63,11 +81,84 @@ public class UserLocationServices extends Service  {
                 Intent i = new Intent("location_update");
                 i.putExtra("coordinates",location.getLongitude()+" "+location.getLatitude());
                 sendBroadcast(i);
-//                saveGeoFire();
-
+                saveGeoFence();
+                checkNotify();
             }
         }
     };
+    private void GeoFence()
+    {
+        Handler handler = new Handler();
+        handler.post(() -> {
+            for (Map.Entry<String, Map.Entry<LatLng,Integer>> entry : Constants.MAIN_GEOFENCES.entrySet()) {
+                double entryRadius = entry.getValue().getValue();
+                entryRadius = entryRadius/1000;
+                Log.i(TAG, "Geofence:  "+entry.getKey()+"Radius: " + entryRadius);
+                GeoQuery geoQuery = geoFire.queryAtLocation(new GeoLocation(entry.getValue().getKey().latitude,entry.getValue().getKey().longitude),entryRadius);
+                geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
+                    @Override
+                    public void onKeyEntered(String key, GeoLocation location) {
+                        Log.i("triggered for "+entry.getKey(),"lat:"+entry.getValue().getKey().latitude+",lng:"+entry.getValue().getKey().longitude);
+                        TriggeredGeoFence("You have entered into: " +entry.getKey());
+                        enteredFence = entry.getKey();
+                    }
+
+                    @Override
+                    public void onKeyExited(String key) {
+                        TriggeredGeoFence("Exited");
+                    }
+
+                    @Override
+                    public void onKeyMoved(String key, GeoLocation location) {
+
+                    }
+
+                    @Override
+                    public void onGeoQueryReady() {
+
+                    }
+
+                    @Override
+                    public void onGeoQueryError(DatabaseError error) {
+
+                    }
+                });
+            }
+        });
+    }
+    private void saveGeoFence()
+    {
+        geoFire = new GeoFire(UserRef);
+        geoFire.setLocation(uniqueID, new GeoLocation(mLastLocation.getLatitude(), mLastLocation.getLongitude()), new GeoFire.CompletionListener() {
+            @Override
+            public void onComplete(String key, DatabaseError error) {
+                Log.d(TAG,"Succesfully added "+uniqueID);
+                DatabaseReference currentEstate = UserRef.child(uniqueID).child("Current Estate:");
+                currentEstate.setValue(enteredFence);
+                GeoFence();
+            }
+        });
+    }
+    private void checkNotify()
+    {
+        DatabaseReference checkNotify = FirebaseDatabase.getInstance().getReference().child("notify");
+        checkNotify.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.child("value:").getValue().equals(true))
+                {
+                    TriggeredGeoFence("Get Ready Bus is Arriving soon");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
     void TriggeredGeoFence(String flag)
     {
         String title = flag;
@@ -84,6 +175,7 @@ public class UserLocationServices extends Service  {
     }
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+
         String input = intent.getStringExtra("inputExtra");
         Intent notificationIntent = new Intent(this, LoginScreen.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this,
@@ -106,6 +198,7 @@ public class UserLocationServices extends Service  {
     public void onDestroy() {
         super.onDestroy();
 
+//        common.removeUniqueId();
         try {
             fusedLocationProviderClient.removeLocationUpdates(mLocationRequestCallback);
         }catch (Exception e){

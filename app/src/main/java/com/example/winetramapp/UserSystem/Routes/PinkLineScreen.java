@@ -23,6 +23,7 @@ import com.example.winetramapp.UserSystem.RecyclerAdapter;
 import com.example.winetramapp.UserSystem.RecyclerItem;
 import com.example.winetramapp.UserSystem.SelectRoute;
 import com.example.winetramapp.UserSystem.UserLocationServices;
+import com.example.winetramapp.UserSystem.Common;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -42,20 +43,7 @@ public class PinkLineScreen extends AppCompatActivity {
     final DatabaseReference Ref = FirebaseDatabase.getInstance().getReference().child("driversAvailable").child("drivers");
     final DatabaseReference tramFranschhoekDatabaseReference = FirebaseDatabase.getInstance().getReference().child("driversAvailable").child("drivers").child("Tram Franschhoek").child("Tram Franschhoek Location");
     private NotificationManagerCompat notificationManager;
-
-    private String timeTableArgs(String ... mTimes)
-    {
-        String mHours = "";
-        for(String mH:mTimes)
-        {
-            mHours = mH;
-            System.out.println(mHours);
-
-        }
-        return mHours;
-
-    }
-
+    Common common = new Common();
 
     @Override
     protected void onResume() {
@@ -79,16 +67,16 @@ public class PinkLineScreen extends AppCompatActivity {
 
         if(SelectRoute.selectedRoute == 7) {
             getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.pink)));
-            mList.add(new RecyclerItem(R.drawable.bus, "Ticket Office", "10:07 | 11:07 | 12:07 | 13:07 | 14:07 | 15:07 | 16:07"));
-            mList.add(new RecyclerItem(R.drawable.tram, "Rickety Bridge Platform", "10:15 | 11:15 | 12:15 | 13:15 | 14:15 | 15:15 16:15"));
-            mList.add(new RecyclerItem(R.drawable.bus, "Moreson", "10:22 | 11:22 | 12:22 | 13:22 | 14:22 | 15:22 | 16:22"));
-            mList.add(new RecyclerItem(R.drawable.bus, "Eikehof", "10:35 | 11:35 | 12:35 | 13:35 | 14:35 | 15:35 | 16:35"));
-            mList.add(new RecyclerItem(R.drawable.bus, "Paserene", "10:46| 11:46 | 12:46 | 13:46 | 14:46 | 15:46 | 16:46"));
-            mList.add(new RecyclerItem(R.drawable.bus, "Leopard's Leap", "-- | -- | 13:03 | 14:03 | 15:03 | 16:03 | 17:03"));
-            mList.add(new RecyclerItem(R.drawable.bus, "Rickety Bridge Platform", "-- | -- | 13:11 | 14:11 | 15:11 | 16:11 | 17:11"));
-            mList.add(new RecyclerItem(R.drawable.bus, "Franschhoek Village", "-- | -- | 13:11 | 14:11 | 15:11 | 16:11 | 17:11"));
-            mList.add(new RecyclerItem(R.drawable.bus, "Le Lude", "-- | -- | 13:11 | 14:11 | 15:11 | 16:11 | 17:11"));
-            mList.add(new RecyclerItem(R.drawable.bus, "Franschhoek Celler", "-- | -- | 13:11 | 14:11 | 15:11 | 16:11 | 17:11"));
+            mList.add(new RecyclerItem(R.drawable.bus, "Ticket Office",  ""));
+            mList.add(new RecyclerItem(R.drawable.tram, "Rickety Bridge Platform", ""));
+            mList.add(new RecyclerItem(R.drawable.bus, "Moreson", ""));
+            mList.add(new RecyclerItem(R.drawable.bus, "Eikehof", ""));
+            mList.add(new RecyclerItem(R.drawable.bus, "Paserene", ""));
+            mList.add(new RecyclerItem(R.drawable.bus, "Leopard's Leap", ""));
+            mList.add(new RecyclerItem(R.drawable.bus, "Rickety Bridge Platform", ""));
+            mList.add(new RecyclerItem(R.drawable.bus, "Franschhoek Village", ""));
+            mList.add(new RecyclerItem(R.drawable.bus, "Le Lude", ""));
+            mList.add(new RecyclerItem(R.drawable.bus, "Franschhoek Celler", ""));
 
         }
         RecyclerView mRecyclerView = findViewById(R.id.recyclerView);
@@ -108,7 +96,6 @@ public class PinkLineScreen extends AppCompatActivity {
                 saveData("pink",b);
                 if(b)
                 {
-                    Toast.makeText(PinkLineScreen.this, timeTableArgs("10","12"), Toast.LENGTH_SHORT).show();
                     Intent i = new Intent(getApplicationContext(), UserLocationServices.class);
                     startService(i);
                     conditions();
@@ -116,6 +103,7 @@ public class PinkLineScreen extends AppCompatActivity {
                 else{
                     Intent i = new Intent(getApplicationContext(),UserLocationServices.class);
                     stopService(i);
+
                 }
             }
         });
@@ -208,5 +196,13 @@ public class PinkLineScreen extends AppCompatActivity {
                 .setCategory(NotificationCompat.CATEGORY_MESSAGE)
                 .build();
         notificationManager.notify(2,notification);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Intent i = new Intent(getApplicationContext(),UserLocationServices.class);
+        stopService(i);
+//        common.removeUniqueId();
     }
 }
