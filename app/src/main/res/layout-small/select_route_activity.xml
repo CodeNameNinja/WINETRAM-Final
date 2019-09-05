@@ -11,7 +11,7 @@
         android:id="@+id/btn_select_line"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="68dp"
+        android:layout_marginBottom="8dp"
         android:background="@drawable/round"
         android:onClick="selectLine"
         android:paddingLeft="30dp"
@@ -20,12 +20,15 @@
         android:textColor="#fff"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.96" />
 
     <LinearLayout
         android:id="@+id/userDotsLayout"
         android:layout_width="wrap_content"
         android:layout_height="64dp"
+        android:layout_marginBottom="8dp"
         android:foregroundGravity="center"
         android:orientation="horizontal"
         android:textAlignment="center"
@@ -34,13 +37,13 @@
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.74"
+        app:layout_constraintVertical_bias="0.78"
         app:layout_constraintVertical_chainStyle="packed" />
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/viewPager"
-        android:layout_width="409dp"
-        android:layout_height="601dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         app:layout_constraintBottom_toTopOf="@+id/btn_select_line"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"

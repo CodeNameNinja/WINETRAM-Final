@@ -10,37 +10,38 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
-        android:layout_width="290dp"
-        android:layout_height="312dp"
-        android:layout_margin="50dp"
+        android:layout_width="251dp"
+        android:layout_height="198dp"
+        android:layout_margin="100dp"
         app:cardCornerRadius="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:onClick="cardClicked"
             android:layout_width="411dp"
             android:layout_height="324dp"
             android:layout_gravity="center|center_vertical"
             android:foregroundGravity="center_vertical|center|center_horizontal"
+            android:onClick="cardClicked"
             tools:layout_editor_absoluteX="1dp">
 
             <ImageView
                 android:id="@+id/image"
-                android:layout_width="405dp"
-                android:layout_height="176dp"
+                android:layout_width="273dp"
+                android:layout_height="85dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/grande_provance"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_bias="0.485"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.006" />
+                app:layout_constraintVertical_bias="0.263" />
 
             <TextView
                 android:id="@+id/title"
@@ -71,9 +72,9 @@
 
             <androidx.constraintlayout.widget.Group
                 android:id="@+id/group"
-                android:onClick="cardClicked"
                 android:layout_width="269dp"
                 android:layout_height="136dp"
+                android:onClick="cardClicked"
                 app:constraint_referenced_ids="guideline6,guideline5,title,desc"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

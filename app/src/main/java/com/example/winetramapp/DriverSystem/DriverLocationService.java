@@ -68,7 +68,7 @@ public class DriverLocationService extends Service {
     final DatabaseReference tramDrakensteinRef = Ref.child("Tram Drakenstein");
 
     final DatabaseReference busReference = FirebaseDatabase.getInstance().getReference().child("driversAvailable").child("drivers");
-    final DatabaseReference redBusReference = RedRef.child(userId).child("bus");
+    final DatabaseReference redBusReference = RedRef.child("bus");
     final DatabaseReference blueBusReference =  BlueRef.child("bus");
     final DatabaseReference yellowBusReference =  YellowRef.child("bus");
     final DatabaseReference greenBusReference =  GreenRef.child("bus");
@@ -78,6 +78,7 @@ public class DriverLocationService extends Service {
     final DatabaseReference greyBusReference =  GreyRef.child("bus");
 
     final DatabaseReference tramFranschhoekDatabaseReference = FirebaseDatabase.getInstance().getReference().child("driversAvailable").child("drivers").child("Tram Franschhoek").child("Tram Franschhoek Location");
+
     final DatabaseReference tramDrakensteinDatabaseReferenceTarget = FirebaseDatabase.getInstance().getReference().child("driversAvailable").child("drivers").child("Tram Drakenstein").child("Tram Drakenstein Location");
 
 
@@ -170,6 +171,7 @@ public class DriverLocationService extends Service {
                         if (!userIdRef.isEmpty() && userIdRef.contains(userId)) {
                             geoFire = new GeoFire(GreenRef);
                             geoFire.setLocation(userId, new GeoLocation(DriverLocationService.mLastLocation.getLatitude(), DriverLocationService.mLastLocation.getLongitude()));
+                            greenBusReference.setValue(enteredFence);
                             GeoFence();
                         }
                     }
@@ -179,6 +181,7 @@ public class DriverLocationService extends Service {
                         if (!userIdRef.isEmpty() && userIdRef.contains(userId)) {
                             geoFire = new GeoFire(YellowRef);
                             geoFire.setLocation(userId, new GeoLocation(DriverLocationService.mLastLocation.getLatitude(), DriverLocationService.mLastLocation.getLongitude()));
+                            yellowBusReference.setValue(enteredFence);
                             GeoFence();
                         }
                     }
@@ -188,6 +191,7 @@ public class DriverLocationService extends Service {
                         if (!userIdRef.isEmpty() && userIdRef.contains(userId)) {
                             geoFire = new GeoFire(PurpleRef);
                             geoFire.setLocation(userId, new GeoLocation(DriverLocationService.mLastLocation.getLatitude(), DriverLocationService.mLastLocation.getLongitude()));
+                            purpleBusReference.setValue(enteredFence);
                             GeoFence();
                         }
                     }
@@ -197,6 +201,7 @@ public class DriverLocationService extends Service {
                         if (!userIdRef.isEmpty() && userIdRef.contains(userId)) {
                             geoFire = new GeoFire(OrangeRef);
                             geoFire.setLocation(userId, new GeoLocation(DriverLocationService.mLastLocation.getLatitude(), DriverLocationService.mLastLocation.getLongitude()));
+                            orangeBusReference.setValue(enteredFence);
                             GeoFence();
                         }
                     }
@@ -206,6 +211,7 @@ public class DriverLocationService extends Service {
                         if (!userIdRef.isEmpty() && userIdRef.contains(userId)) {
                             geoFire = new GeoFire(PinkRef);
                             geoFire.setLocation(userId, new GeoLocation(DriverLocationService.mLastLocation.getLatitude(), DriverLocationService.mLastLocation.getLongitude()));
+                            pinkBusReference.setValue(enteredFence);
                             GeoFence();
                         }
                     }
@@ -215,15 +221,16 @@ public class DriverLocationService extends Service {
                         if (!userIdRef.isEmpty() && userIdRef.contains(userId)) {
                             geoFire = new GeoFire(GreyRef);
                             geoFire.setLocation(userId, new GeoLocation(DriverLocationService.mLastLocation.getLatitude(), DriverLocationService.mLastLocation.getLongitude()));
+                            greyBusReference.setValue(enteredFence);
                             GeoFence();
                         }
                     }
                     if (dataSnapshot.hasChild("Tram Franschhoek")) {
                         String userIdRef = dataSnapshot.child("Tram Franschhoek").getValue().toString();
-
                         if (!userIdRef.isEmpty() && userIdRef.contains(userId)) {
                             geoFire = new GeoFire(tramFranchhoekRef);
                             geoFire.setLocation(userId, new GeoLocation(DriverLocationService.mLastLocation.getLatitude(), DriverLocationService.mLastLocation.getLongitude()));
+                            tramFranschhoekDatabaseReference.setValue(enteredFence);
                             GeoFence();
                         }
                     }
@@ -233,6 +240,7 @@ public class DriverLocationService extends Service {
                         if (!userIdRef.isEmpty() && userIdRef.contains(userId)) {
                             geoFire = new GeoFire(tramDrakensteinRef);
                             geoFire.setLocation(userId, new GeoLocation(DriverLocationService.mLastLocation.getLatitude(), DriverLocationService.mLastLocation.getLongitude()));
+                            tramDrakensteinDatabaseReferenceTarget.setValue(enteredFence);
                             GeoFence();
                         }
                     }

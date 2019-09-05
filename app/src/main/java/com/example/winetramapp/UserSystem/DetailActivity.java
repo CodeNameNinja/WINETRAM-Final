@@ -21,8 +21,7 @@ public class DetailActivity extends AppCompatActivity {
             startActivity(intent);
         }
 
-
-        TextView textView = findViewById(R.id.recyclerTextView);
+        TextView textView = findViewById(R.id.desc);
         textView.setText(getIntent().getStringExtra("param"));
     }
 }

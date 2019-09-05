@@ -1,17 +1,22 @@
 package com.example.winetramapp.UserSystem;
 
 
+import android.Manifest;
 import android.animation.ArgbEvaluator;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
+import com.example.winetramapp.DriverSystem.DriverLocationService;
 import com.example.winetramapp.R;
 import com.example.winetramapp.UserSystem.Routes.BlueLineSceen;
 import com.example.winetramapp.UserSystem.Routes.GreenLineScreen;
@@ -21,6 +26,8 @@ import com.example.winetramapp.UserSystem.Routes.PinkLineScreen;
 import com.example.winetramapp.UserSystem.Routes.PurpleLineScreen;
 import com.example.winetramapp.UserSystem.Routes.RedLineScreen;
 import com.example.winetramapp.UserSystem.Routes.YellowLineScreen;
+import com.nabinbhandari.android.permissions.PermissionHandler;
+import com.nabinbhandari.android.permissions.Permissions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -88,7 +95,7 @@ public class SelectRoute extends AppCompatActivity {
 
         getSupportActionBar().setTitle("Select a Route");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+        runtime_permission();
         mDotsLayout = (LinearLayout) findViewById(R.id.userDotsLayout);
 
         models = new ArrayList<>();
@@ -171,6 +178,27 @@ public class SelectRoute extends AppCompatActivity {
         {
             mDots[position].setTextColor(getResources().getColor(R.color.colorPrimary));
         }
+    }
+    public void cardClicked(View view)
+    {
+        Intent intent = new Intent(this, SelectRoute.class);
+        startActivity(intent);
+    }
+    public void runtime_permission()
+    {
+        String[] permissions = {Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION};
+        Permissions.check(this/*context*/, permissions, "Location permissions are required to get your location"/*rationale*/, null/*options*/, new PermissionHandler() {
+            @Override
+            public void onGranted() {
+
+            }
+
+            @Override
+            public void onDenied(Context context, ArrayList<String> deniedPermissions) {
+                super.onDenied(context, deniedPermissions);
+            }
+        });
+
     }
 
 }

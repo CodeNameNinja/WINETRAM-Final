@@ -178,51 +178,61 @@ public class DriverMapActivity extends AppCompatActivity implements OnMapReadyCa
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.child("RedLine").hasChild(userId)){
                     DatabaseReference cRef = ref.child("RedLine");
+                    cRef.removeValue();
                     GeoFire geoFire = new GeoFire(cRef);
                     geoFire.removeLocation(userId);
                 }
                 if(dataSnapshot.child("BlueLine").hasChild(userId)){
                     DatabaseReference cRef = ref.child("BlueLine");
+                    cRef.removeValue();
                     GeoFire geoFire = new GeoFire(cRef);
                     geoFire.removeLocation(userId);
                 }
                 if(dataSnapshot.child("GreenLine").hasChild(userId)){
                     DatabaseReference cRef = ref.child("GreenLine");
+                    cRef.removeValue();
                     GeoFire geoFire = new GeoFire(cRef);
                     geoFire.removeLocation(userId);
                 }
                 if(dataSnapshot.child("YellowLine").hasChild(userId)){
                     DatabaseReference cRef = ref.child("YellowLine");
+                    cRef.removeValue();
                     GeoFire geoFire = new GeoFire(cRef);
                     geoFire.removeLocation(userId);
                 }
                 if(dataSnapshot.child("PurpleLine").hasChild(userId)){
                     DatabaseReference cRef = ref.child("PurpleLine");
+                    cRef.removeValue();
                     GeoFire geoFire = new GeoFire(cRef);
                     geoFire.removeLocation(userId);
                 }
                 if(dataSnapshot.child("OrangeLine").hasChild(userId)){
                     DatabaseReference cRef = ref.child("OrangeLine");
+                    cRef.removeValue();
                     GeoFire geoFire = new GeoFire(cRef);
                     geoFire.removeLocation(userId);
                 }
                 if(dataSnapshot.child("PinkLine").hasChild(userId)){
                     DatabaseReference cRef = ref.child("PinkLine");
+                    cRef.removeValue();
                     GeoFire geoFire = new GeoFire(cRef);
                     geoFire.removeLocation(userId);
                 }
                 if(dataSnapshot.child("GreyLine").hasChild(userId)){
                     DatabaseReference cRef = ref.child("GreyLine");
+                    cRef.removeValue();
                     GeoFire geoFire = new GeoFire(cRef);
                     geoFire.removeLocation(userId);
                 }
                 if(dataSnapshot.child("Tram Franschhoek").hasChild(userId)){
                     DatabaseReference cRef = ref.child("Tram Franschhoek");
+                    cRef.removeValue();
                     GeoFire geoFire = new GeoFire(cRef);
                     geoFire.removeLocation(userId);
                 }
                 if(dataSnapshot.child("Tram Drakenstein").hasChild(userId)){
                     DatabaseReference cRef = ref.child("Tram Drakenstein");
+                    cRef.removeValue();
                     GeoFire geoFire = new GeoFire(cRef);
                     geoFire.removeLocation(userId);
                 }
