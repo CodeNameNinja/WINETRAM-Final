@@ -10,7 +10,7 @@
             android:id="@+id/cardView3"
             android:layout_width="364dp"
             android:layout_height="430dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/cardView2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
@@ -26,6 +26,7 @@
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/cardView2"
             android:layout_width="258dp"
             android:layout_height="67dp"
             app:layout_constraintBottom_toBottomOf="parent"
