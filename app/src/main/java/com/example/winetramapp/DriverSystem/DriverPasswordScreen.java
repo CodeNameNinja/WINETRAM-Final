@@ -27,6 +27,7 @@ public class DriverPasswordScreen extends AppCompatActivity implements View.OnCl
     int counter;
     String masterCode = "5555";
     String triggerCode = "9999";
+    String tramTrigger = "6565";
     int iCode1,iCode2,iCode3,iCode4;
     int buttonClicked;
     String TAG = DriverPasswordScreen.class.getSimpleName();
@@ -113,6 +114,7 @@ try{
                     public void run() {
                         String masterTest = iCode1 + "" + iCode2 + "" + iCode3 + "" + iCode4;
                         String triggerTest = iCode1 + "" + iCode2 + "" + iCode3 + "" + iCode4;
+                        String tramTriggerTest = iCode1 + "" + iCode2 + "" + iCode3 + "" + iCode4;
 
                         if (masterTest.equals(masterCode)){
                             Intent intent = new Intent(DriverPasswordScreen.this,DriverLoginActivity.class);
@@ -121,7 +123,17 @@ try{
                         }
                         if (triggerTest.equals(triggerCode)){
                            DatabaseReference trigger = FirebaseDatabase.getInstance().getReference().child("notify").child("value:");
-                           trigger.setValue(true);
+                           trigger.setValue("Bus");
+                           Handler handler1 = new Handler();
+                           handler1.postDelayed(new Runnable() {
+                               @Override
+                               public void run() {
+                                   trigger.setValue(false);
+                               }
+                           },5000);
+                        }if (tramTriggerTest.equals(tramTrigger)){
+                           DatabaseReference trigger = FirebaseDatabase.getInstance().getReference().child("notify").child("value:");
+                           trigger.setValue("Tram");
                            Handler handler1 = new Handler();
                            handler1.postDelayed(new Runnable() {
                                @Override

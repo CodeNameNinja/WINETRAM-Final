@@ -69,7 +69,7 @@ public class RedLineScreen extends AppCompatActivity {
 
         getSupportActionBar().setTitle("Time Table");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        installListener();
+//        installListener();
         ArrayList<RecyclerItem> mList = new ArrayList<>();
         if(SelectRoute.selectedRoute == 0) {
                 getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.red)));

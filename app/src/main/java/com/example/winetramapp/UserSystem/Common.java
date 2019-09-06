@@ -82,18 +82,18 @@ public class Common {
         });
     }
 
-//public void removeUniqueId()
-//{
-//    DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("usersAvailable").child("Users");
-//
-//
-//    GeoFire geoFire = new GeoFire(ref);
-//    geoFire.removeLocation(uniqueID, new GeoFire.CompletionListener() {
-//        @Override
-//        public void onComplete(String key, DatabaseError error) {
-//            Log.d(TAG, "Removed Location Successfully: "+uniqueID);
-//            Log.e(TAG,key+"\n"+error);
-//        }
-//    });
-//}
+public void removeUniqueId()
+{
+    DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("usersAvailable").child("Users");
+
+
+    GeoFire geoFire = new GeoFire(ref);
+    geoFire.removeLocation(uniqueID, new GeoFire.CompletionListener() {
+        @Override
+        public void onComplete(String key, DatabaseError error) {
+            Log.d(TAG, "Removed Location Successfully: "+uniqueID);
+            Log.e(TAG,key+"\n"+error);
+        }
+    });
+}
 }

@@ -1,6 +1,7 @@
 package com.example.winetramapp.UserSystem;
 
 import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
@@ -19,6 +20,7 @@ import com.example.winetramapp.Constants;
 import com.example.winetramapp.DriverSystem.DriverLocationService;
 import com.example.winetramapp.LoginScreen;
 import com.example.winetramapp.R;
+import com.example.winetramapp.UserSystem.Routes.RedLineScreen;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQuery;
@@ -39,6 +41,7 @@ import java.util.UUID;
 
 import static com.example.winetramapp.NotificationChannel.CHANNEL_1_ID;
 import static com.example.winetramapp.NotificationChannel.CHANNEL_2_ID;
+import static com.example.winetramapp.NotificationChannel.CHANNEL_3_ID;
 
 public class UserLocationServices extends Service  {
     private FusedLocationProviderClient fusedLocationProviderClient;
@@ -60,7 +63,7 @@ public class UserLocationServices extends Service  {
         locationRequest = new LocationRequest();
 
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        locationRequest.setInterval(1000);
+        locationRequest.setInterval(3000);
 
         fusedLocationProviderClient.requestLocationUpdates(locationRequest,mLocationRequestCallback, Looper.myLooper());
         notificationManager = NotificationManagerCompat.from(this);
@@ -145,10 +148,36 @@ public class UserLocationServices extends Service  {
         checkNotify.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.child("value:").getValue().equals(true))
+                if(dataSnapshot.exists())
                 {
-                    TriggeredGeoFence("Get Ready Bus is Arriving soon");
+                    if(dataSnapshot.child("value:").getValue().equals("Bus"))
+                    {
+                      busNotificationsBody("Get Ready the Bus is on its way");
+                        Handler handler1 = new Handler();
+                        handler1.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                checkNotify.child("value:").setValue(false);
+                                notificationManager.cancel(6);
+                            }
+                        },1000*60);
+                    }
+                    if(dataSnapshot.child("value:").getValue().equals("Tram"))
+                    {
+
+                    tramNotificationsBody("Get Ready Tram is on its way");
+                        Handler handler1 = new Handler();
+                        handler1.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                checkNotify.child("value:").setValue(false);
+                                notificationManager.cancel(3);
+                            }
+                        },1000*60);
+                    }
+
                 }
+
             }
 
             @Override
@@ -172,6 +201,34 @@ public class UserLocationServices extends Service  {
                 .build();
 
         notificationManager.notify(1,notification);
+    }
+    void busNotificationsBody(String BusLocation)
+    {
+        String title = BusLocation;
+        String message = "";
+        Notification notification = new NotificationCompat.Builder(UserLocationServices.this, CHANNEL_1_ID)
+                .setSmallIcon(R.drawable.bus)
+                .setContentTitle(title)
+                .setContentText(message)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+                .build();
+
+        notificationManager.notify(6,notification);
+    }
+    void tramNotificationsBody(String TramLocation)
+    {
+        String title = TramLocation;
+        String message = "";
+        Notification notification = new NotificationCompat.Builder(UserLocationServices.this, CHANNEL_3_ID)
+                .setSmallIcon(R.drawable.bus)
+                .setContentTitle(title)
+                .setContentText(message)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+                .build();
+
+        notificationManager.notify(3,notification);
     }
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -198,7 +255,7 @@ public class UserLocationServices extends Service  {
     public void onDestroy() {
         super.onDestroy();
 
-//        common.removeUniqueId();
+        common.removeUniqueId();
         try {
             fusedLocationProviderClient.removeLocationUpdates(mLocationRequestCallback);
         }catch (Exception e){
